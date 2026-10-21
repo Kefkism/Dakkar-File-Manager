@@ -1,0 +1,5 @@
+[Nemo Search Helper]
+TryExec=unzip;html2text;dakkar-epub2text;
+Exec=dakkar-epub2text %s
+MimeType=application/epub+zip;
+Priority=100

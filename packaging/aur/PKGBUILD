@@ -1,0 +1,28 @@
+# Maintainer: Dakkar Project <https://github.com/Kefkism/Dakkar>
+# Local build: run ./prepare-local.sh, then makepkg -si
+# AUR: replace source with the published GitHub release tag and its real SHA256.
+pkgname=dakkar
+pkgver=1.0
+pkgrel=2
+pkgdesc='Dakkar standalone GTK3 file manager (isolated from Nemo)'
+arch=('x86_64' 'aarch64')
+url='https://github.com/Kefkism/Dakkar'
+license=('GPL-2.0-or-later')
+depends=('gtk3' 'glib2' 'cinnamon-desktop' 'xapp' 'json-glib' 'gstreamer'
+         'gst-plugins-base-libs' 'libgsf' 'libexif' 'exempi' 'gvfs')
+makedepends=('meson' 'ninja' 'gcc' 'pkgconf' 'gobject-introspection'
+             'intltool' 'itstool' 'gettext' 'libarchive')
+source=("dakkar-${pkgver}.tar.gz")
+sha256sums=('0ac2a1352aac415b6b42d96091fcacb76d9a8292e4f0ac250c4aea07ed921cd3')
+
+build() {
+    cd "$srcdir/Dakkar"
+    ./packaging/common/build.sh "$PWD" "$PWD/_build-aur" /opt/dakkar
+}
+
+package() {
+    cd "$srcdir/Dakkar"
+    DESTDIR="$pkgdir" meson install -C _build-aur --no-rebuild
+    ./packaging/common/export.sh "$pkgdir"
+    install -Dm644 COPYING "$pkgdir/usr/share/licenses/$pkgname/COPYING"
+}

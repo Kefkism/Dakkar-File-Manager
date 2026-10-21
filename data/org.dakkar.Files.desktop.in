@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Name=Dakkar
+GenericName=Dakkar File Manager
+Comment=Dakkar file manager
+Exec=@bindir@/dakkar %U
+Icon=org.dakkar.Files
+Terminal=false
+Categories=GTK;Utility;FileManager;
+MimeType=inode/directory;application/x-gnome-saved-search;
+StartupNotify=true
+StartupWMClass=dakkar
+X-Dakkar-Project=Dakkar

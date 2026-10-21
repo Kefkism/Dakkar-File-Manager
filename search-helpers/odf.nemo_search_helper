@@ -1,0 +1,5 @@
+[Nemo Search Helper]
+TryExec=dakkar-odf-to-txt;
+Exec=dakkar-odf-to-txt %s
+MimeType=application/vnd.oasis.opendocument.text;application/vnd.oasis.opendocument.spreadsheet;application/vnd.oasis.opendocument.presentation;application/vnd.oasis.opendocument.graphics;
+Priority=100

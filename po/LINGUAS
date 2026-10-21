@@ -1,0 +1,3 @@
+# Languages with a translation for the Dakkar file manager (gettext domain 'nemo').
+# Missing languages fall back to the English msgids.
+nl

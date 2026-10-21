@@ -1,0 +1,9 @@
+Dakkar 1.0 — 2026-10-21
+=======================
+
+- Dakkar's initial release under its own version number.
+- Native GTK 3 file manager based on Nemo 6.4.5.
+- Miller columns, customizable appearance and file-management features.
+- Application executable: dakkar; desktop identifier: org.dakkar.Files.
+
+For upstream project history and attribution, see ChangeLog, NOTICE and CREDITS.

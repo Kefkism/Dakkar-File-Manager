@@ -1,0 +1,22 @@
+Credits
+=======
+
+Nemo
+  The Cinnamon file manager by Linux Mint and its contributors.
+  https://github.com/linuxmint/nemo
+  https://github.com/linuxmint/nemo/graphs/contributors
+  License: GPL-2.0-or-later (libnemo-extension: LGPL).
+  Dakkar is a fork of Nemo.
+
+GNOME Nautilus (GNOME Files)
+  The GNOME file manager that Nemo was forked from (Nautilus 3.4, 2012).
+  https://gitlab.gnome.org/GNOME/nautilus
+  License: GPL-2.0-or-later.
+
+linux-nemo-miller-columns
+  "Nemo Miller Columns", a Miller columns view for Nemo, by Davide Minardi
+  (GitHub: davemin).
+  https://github.com/davemin/linux-nemo-miller-columns
+  License: MIT License, "Copyright (c) 2024 Davide Minardi" (from the
+  repository's LICENSE file). Credited for the Miller columns view idea and
+  feature set in Dakkar.

@@ -1,0 +1,21 @@
+Dakkar
+======
+
+Dakkar is a file manager for Linux. It is a fork of Nemo, the Cinnamon file
+manager by Linux Mint (https://github.com/linuxmint/nemo), which itself is
+derived from GNOME Nautilus (GNOME Files,
+https://gitlab.gnome.org/GNOME/nautilus).
+
+License: GNU General Public License, version 2 or (at your option) any later
+version (GPL-2.0-or-later), the same license as Nemo; see COPYING.
+libnemo-extension keeps its LGPL license (COPYING.LIB, COPYING.EXTENSIONS),
+and the documentation its own terms (COPYING-DOCS).
+
+Dakkar is made by Kefkism (https://github.com/Kefkism).
+Official repository and update channel: https://github.com/Kefkism/Dakkar
+
+All copyright notices of Nemo, Nautilus and their contributors in the source
+files are kept unchanged, as the GPL requires. Dakkar's own changes are
+released under the same license.
+
+See CREDITS for the projects Dakkar builds on and credits.

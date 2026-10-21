@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>org.dakkar.Files</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-2.0-or-later</project_license>
+  <name>Dakkar</name>
+  <summary>Dakkar file manager with Miller columns</summary>
+  <description>
+    <p>Dakkar is a file manager forked from Nemo, which is derived from Nautilus.
+    It adds Miller columns, custom colours and transfer tools.</p>
+  </description>
+  <launchable type="desktop-id">org.dakkar.Files.desktop</launchable>
+  <icon type="stock">org.dakkar.Files</icon>
+  <url type="homepage">https://github.com/Kefkism/Dakkar</url>
+  <url type="bugtracker">https://github.com/Kefkism/Dakkar/issues</url>
+  <url type="vcs-browser">https://github.com/Kefkism/Dakkar</url>
+  <developer id="com.github.Kefkism">
+    <name>Kefkism</name>
+  </developer>
+  <developer_name>Kefkism</developer_name>
+  <releases>
+    <release version="1.0" date="2026-10-21">
+      <description>
+        <p>First release of Dakkar under its own version numbering.</p>
+      </description>
+    </release>
+  </releases>
+  <provides>
+    <binary>dakkar</binary>
+  </provides>
+</component>

@@ -1,0 +1,5 @@
+[Nemo Search Helper]
+TryExec=dakkar-xls-to-txt;
+Exec=dakkar-xls-to-txt %s
+MimeType=application/vnd.ms-excel;
+Priority=100

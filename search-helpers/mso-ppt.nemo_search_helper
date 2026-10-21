@@ -1,0 +1,5 @@
+[Nemo Search Helper]
+TryExec=dakkar-ppt-to-txt;libreoffice;
+Exec=dakkar-ppt-to-txt %s
+MimeType=application/vnd.ms-powerpoint;
+Priority=100

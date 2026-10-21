@@ -1,0 +1,24 @@
+/* For Places Sidebar disk-usage indicators.
+ * A visible track plus the fill, both derived from the active theme, so the
+ * bar reads as a usage meter (not as a stray underline) on light and dark
+ * themes alike. */
+
+.places-treeview {
+    -NemoPlacesTreeView-disk-full-bg-color: mix(@theme_bg_color, @theme_fg_color, 0.22);
+    -NemoPlacesTreeView-disk-full-fg-color: @theme_selected_bg_color;
+    -NemoPlacesTreeView-disk-full-bar-width: 3px;
+    -NemoPlacesTreeView-disk-full-bar-radius: 1px;
+    -NemoPlacesTreeView-disk-full-bottom-padding: 2px;
+    -NemoPlacesTreeView-disk-full-max-length: 70px;
+}
+
+.places-treeview:selected {
+    -NemoPlacesTreeView-disk-full-bg-color: mix(@theme_selected_bg_color, @theme_selected_fg_color, 0.35);
+    -NemoPlacesTreeView-disk-full-fg-color: @theme_selected_fg_color;
+}
+
+.places-treeview:hover {
+}
+
+.places-treeview:selected:hover {
+}

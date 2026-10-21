@@ -1,0 +1,88 @@
+{
+  "app-id": "org.dakkar.Files",
+  "runtime": "org.gnome.Platform",
+  "runtime-version": "50",
+  "sdk": "org.gnome.Sdk",
+  "command": "dakkar",
+  "finish-args": [
+    "--socket=wayland",
+    "--socket=fallback-x11",
+    "--share=ipc",
+    "--filesystem=home",
+    "--filesystem=/media",
+    "--filesystem=/mnt",
+    "--device=dri",
+    "--talk-name=org.freedesktop.UDisks2"
+  ],
+  "modules": [
+    {
+      "name": "xapp",
+      "buildsystem": "meson",
+      "sources": [
+        {
+          "type": "git",
+          "url": "https://github.com/linuxmint/xapp.git",
+          "branch": "master"
+        }
+      ],
+      "config-opts": [
+        "-Dapp-lib-only=true",
+        "-Dintrospection=false",
+        "-Dvapi=false",
+        "-Ddocs=false",
+        "-Dstatus-notifier=false",
+        "-Dkbd-layout-controller=disabled"
+      ]
+    },
+    {
+      "name": "cinnamon-desktop",
+      "buildsystem": "meson",
+      "sources": [
+        {
+          "type": "git",
+          "url": "https://github.com/linuxmint/cinnamon-desktop.git",
+          "branch": "master"
+        }
+      ],
+      "config-opts": [
+        "-Dsystemd=disabled",
+        "-Dbubblewrap=disabled"
+      ]
+    },
+    {
+      "name": "libgsf",
+      "buildsystem": "autotools",
+      "config-opts": [
+        "--disable-static",
+        "--disable-introspection"
+      ],
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://download.gnome.org/sources/libgsf/1.14/libgsf-1.14.59.tar.xz",
+          "sha256": "0d03cb6fadfe735caa13498a024ccd8fdb6cab77df6d9d283a64410c96f2fa49"
+        }
+      ]
+    },
+    {
+      "name": "dakkar",
+      "buildsystem": "meson",
+      "config-opts": [
+        "--libdir=lib",
+        "-Dgtk_doc=false",
+        "-Dtracker=false",
+        "-Dxmp=false",
+        "-Dexif=false"
+      ],
+      "post-install": [
+        "sed -i \"s|^Exec=.*|Exec=dakkar %U|\" /app/share/applications/org.dakkar.Files.desktop"
+      ],
+      "sources": [
+        {
+          "type": "dir",
+          "path": "../.."
+        }
+      ]
+    }
+  ]
+}
