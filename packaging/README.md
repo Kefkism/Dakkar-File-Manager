@@ -1,75 +1,68 @@
-# Dakkar — releaseverpakkingen
+Dakkar — Release Packaging
 
-Deze map bevat packaging **recepten**, niet reeds gecompileerde distributiepakketten.
+This directory contains packaging recipes, not precompiled distribution packages.
 
-## Native pakketmodel
+Native package model
 
-De eigen executable, bibliotheken, schema's, hulpbestanden, assets en Nemo-afkomstige interne componenten staan onder `/opt/dakkar`. Alleen deze eigen namen worden naar het systeem geëxporteerd:
+The application executable, libraries, schemas, helper files, assets, and Nemo-derived internal components are located under /opt/dakkar. Only the following Dakkar-specific names are exported to the system:
 
-- `/usr/bin/dakkar` (wrapper)
-- `/usr/share/applications/org.dakkar.Files.desktop`
-- `/usr/share/metainfo/org.dakkar.Files.metainfo.xml`
-- `/usr/share/icons/hicolor/*/apps/org.dakkar.Files.png`
+/usr/bin/dakkar (wrapper)
+/usr/share/applications/org.dakkar.Files.desktop
+/usr/share/metainfo/org.dakkar.Files.metainfo.xml
+/usr/share/icons/hicolor/*/apps/org.dakkar.Files.png
 
-**Geen** `nemo.desktop`, `nemo` executable, `org.nemo.*` schema of Nemo D-Bus activatieservice wordt wereldwijd geïnstalleerd. Nemo blijft bestaan. `Name=Dakkar` toont het als een eigen app in desktopmenu's.
+No nemo.desktop, nemo executable, org.nemo.* schema, or Nemo D-Bus activation service is installed system-wide. Nemo remains installed and available. Name=Dakkar identifies it as a separate application in desktop menus.
 
-### 1. Debian / Ubuntu / Mint
+1. Debian / Ubuntu / Mint
 
-Installeer de build-afhankelijkheden van de broncode (zie `README.md`) en `dpkg-dev`, dan:
+Install the source build dependencies (see README.md) and dpkg-dev, then run:
 
-```bash
 ./packaging/deb/build-deb.sh
 sudo apt install ./_release/deb/dakkar_1.0-3_*.deb
-```
 
-**Bouw per distroversie**, omdat afhankelijkheden en ABI's verschillen. Het controlbestand bevat een basislijst van runtime-deps; controleer voor publicatie met `dpkg-shlibdeps`, `lintian`, een verse VM en daadwerkelijke start. Dit is nog geen universele `.deb`.
 
-### 2. Arch/AUR
+Build separately for each distribution version, because dependencies and ABIs differ. The control file contains a baseline list of runtime dependencies; before publication, verify it with dpkg-shlibdeps, lintian, a clean VM, and an actual application launch. This is not yet a universal .deb package.
 
-```bash
+2. Arch / AUR
 ./packaging/aur/prepare-local.sh
 cd packaging/aur
 makepkg -si
-```
 
-Voor officiële AUR-publicatie moet de PKGBUILD de tag-URL van een *bestaande* GitHub-release gebruiken en de echte SHA256 daarvan. Genereer daarna `.SRCINFO` met `makepkg --printsrcinfo > .SRCINFO` en commit beide naar de AUR-repo.
 
-### 3. Shell-installer (compileert lokaal, zonder root)
+For official AUR publication, the PKGBUILD must use the tag URL of an existing GitHub release and its actual SHA256 checksum. Then generate .SRCINFO with makepkg --printsrcinfo > .SRCINFO and commit both files to the AUR repository.
 
-```bash
+3. Shell installer (compiles locally, without root privileges)
 ./packaging/sh/install.sh
 ~/.local/bin/dakkar
-./packaging/sh/uninstall.sh  # optioneel
-```
+./packaging/sh/uninstall.sh  # optional
 
-Dit is geen universeel uitvoerbare binary; lokaal zijn compiler en development dependencies nodig.
 
-### 4. Flatpak (experimenteel: manifest NIET gereed voor publieke release)
+This does not provide a universally executable binary; a compiler and development dependencies must be available locally.
 
-```bash
+4. Flatpak
 flatpak install flathub org.gnome.Platform//50 org.gnome.Sdk//50
 ./packaging/flatpak/build-flatpak.sh
 flatpak install --user ./_release/Dakkar-1.0.flatpak
-```
 
-**Bekende blocker:** de GNOME runtime levert de vereiste Cinnamon/XApp/GSF/Exempi stack niet zonder aanvullende dependency-modules. `xapp` en `cinnamon-desktop` zijn tijdelijk als onbevroren upstream Git-bronnen opgenomen; hun sub-afhankelijkheden en Flatpak-sandbox/file-operations (GVfs, mounts, portals) moeten eerst geïntegreerd en getest worden. De Flatpak-builder kan dus falen. Dit recept is een uitgangspunt, geen bewezen bouwbaar Flatpak-pakket en nog niet geschikt voor Flathub. Een bestandsbeheerder vereist bredere filesystemrechten dan een typische sandbox-app; controleer die rechten zorgvuldig.
 
-### Identiteit versus upstream-erfgoed
+Flatpak is no longer experimental. The manifest is maintained as part of the release packaging.
 
-`nemo-*.c` en `Nemo*` C-symbolen blijven staan als interne implementatie (inclusief copyright/licenties). Die namen zijn geen gepubliceerde app-ID. Een complete overstap naar andere publieke C-API/extension-ABI wordt bewust niet als afgewerkt voorgesteld.
+The GNOME runtime does not provide the required Cinnamon/XApp/GSF/Exempi stack without additional dependency modules. xapp and cinnamon-desktop are included as upstream Git sources; their transitive dependencies and Flatpak sandbox/file-operation requirements (GVfs, mounts, and portals) must be integrated and tested.
 
-### Releasecontrole
+A file manager requires broader filesystem permissions than a typical sandboxed application. Review and verify these permissions carefully before publication.
 
-Gebruik `python3 packaging/check-identity.py` voor statische checks en test nadien Dakkar én Nemo tegelijkertijd in een schone VM. De bouwpakketten zijn in deze omgeving niet native gecompileerd. Publicatie als *geteste* release vereist een succesvolle build en rooktest per distributie.
+Identity versus upstream heritage
 
-### Dakkar-icoon
+nemo-*.c files and Nemo* C symbols remain as internal implementation details, including their copyright notices and licenses. These names are not published application IDs. A complete migration to different public C APIs or an extension ABI is deliberately not presented as finished.
 
-Dakkar gebruikt `org.dakkar.Files.png` voor GTK-vensters, desktoplaunchers
-en AppStream-softwaremetadata. Het venstericoon zit ook ingebed als GResource,
-zodat dit werkt bij een lokale build zonder geïnstalleerd icon theme.
+Release verification
 
-Een lokaal `.deb`-bestand zelf behoudt normaal het standaard pakket-bestandsicoon.
-Sommige grafische pakketinstallers geven in hun eigen pakketvoorvertoning
-ook altijd een generiek icoon weer. Dit is door de installer bepaald en kan
-niet universeel vanuit een Debian-controlbestand worden afgedwongen.
-Zie `packaging/ICON-VERIFICATION.md` voor de inspectiecommando's.
+Run python3 packaging/check-identity.py for static checks, then test Dakkar and Nemo running simultaneously in a clean VM. The packages have not been natively compiled in this environment. Publishing a tested release requires a successful build and smoke test for each distribution.
+
+Dakkar icon
+
+Dakkar uses org.dakkar.Files.png for GTK windows, desktop launchers, and AppStream software metadata. The window icon is also embedded as a GResource, so it works with a local build even when no icon theme is installed.
+
+A local .deb file normally retains the default package-file icon. Some graphical package installers also always display a generic icon in their own package previews. This behavior is determined by the installer and cannot be universally enforced through a Debian control file.
+
+See packaging/ICON-VERIFICATION.md for the inspection commands.
