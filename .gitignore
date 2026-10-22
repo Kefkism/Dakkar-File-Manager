@@ -33,7 +33,7 @@ build.ninja
 *.pkg.tar.*
 *.buildinfo
 *.sig
-
+packaging/
 # ------------------------------------------------------------
 # Flatpak Builder local state
 # The current build script also uses ~/.cache/dakkar-flatpak-build

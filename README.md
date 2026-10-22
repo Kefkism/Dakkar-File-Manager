@@ -107,8 +107,6 @@ Uninstall:
 ./packaging/sh/uninstall.sh
 ```
 
-The installer compiles from source, so build dependencies must be available. Additional packaging and build notes are in [`packaging/README.md`](packaging/README.md).
-
 ---
 
 ## Credits & acknowledgments
