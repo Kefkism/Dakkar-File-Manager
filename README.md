@@ -64,7 +64,7 @@ Existing actions and scripts can be copied or imported from Nemo's folders.
 
 ## Releases
 
-Find available downloads and installation options on **[GitHub Releases](https://github.com/Kefkism/Dakkar/releases)**.
+Find available downloads and installation options on **[GitHub Releases]([https://github.com/Kefkism/Dakkar/releases](https://github.com/Kefkism/Dakkar-File-Manager/releases/t))**.
 
 ## Build from source
 
