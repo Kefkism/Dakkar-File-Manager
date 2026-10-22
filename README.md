@@ -10,6 +10,8 @@
 
 Explore entire folder hierarchies at a glance, preview files in place, and make your workspace truly yours. Dakkar brings a fresh way to navigate files, backed by Nemo's familiar Linux file-management foundation.
 
+<img src="screenshot.png" alt="Dakkar screenshot" />
+
 **[Features](#features)** · **[Nemo compatibility](#nemo-compatibility)** · **[Releases](#releases)** · **[Build from source](#build-from-source)**
 
 </div>
