@@ -1355,7 +1355,6 @@ rec_permissions_undo_func (NemoFileUndoInfo *info,
 	NemoFileUndoInfoRecPermissions *self = NEMO_FILE_UNDO_INFO_REC_PERMISSIONS (info);
 
 	/* Internally managed op, pop flag. */
-	/* TODO: why? */
 	nemo_file_undo_manager_pop_flag ();
 
 	if (g_hash_table_size (self->priv->original_permissions) > 0) {

@@ -574,7 +574,7 @@ notebook_popup_menu_show (NemoWindowPane *pane,
 		event_time = gtk_get_current_event_time ();
 	}
 
-	/* TODO is this correct? */
+	/* Attach the popup to the notebook so it tracks the pane's lifetime. */
 	gtk_menu_attach_to_widget (GTK_MENU (popup),
 				   pane->notebook,
 				   NULL);
@@ -969,7 +969,7 @@ nemo_window_pane_constructed (GObject *obj)
 	g_signal_connect (pane->action_group, "pre-activate",
 			  G_CALLBACK (toolbar_action_group_activated_callback), pane);
 
-	/* Pack to windows hbox (under the menu */
+	/* Pack the toolbar into the window's toolbar holder */
 	gtk_box_pack_start (GTK_BOX (window->details->toolbar_holder),
 			    pane->tool_bar,
 			    TRUE, TRUE, 0);

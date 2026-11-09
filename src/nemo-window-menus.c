@@ -1455,22 +1455,6 @@ static const GtkActionEntry main_entries[] = {
                                  N_("_Keyboard Shortcuts"), "<control>F1",
                                  N_("Display keyboard shortcuts"),
                                  G_CALLBACK (action_show_shortcuts_window) },
-  /** name, stock id          { "NemoHelpSearch", NULL,
-     label, accelerator        N_("Search for files"), NULL,
-     tooltip                   N_("Locate files based on file name and type. Save your searches for later use."),
-                                 G_CALLBACK (action_nemo_manual_callback) },
-     name, stock id          { "NemoHelpSort", NULL,
-     label, accelerator        N_("Sort files and folders"), NULL,
-     tooltip                   N_("Arrange files by name, size, type, or when they were changed."),
-                                 G_CALLBACK (action_nemo_manual_callback) },
-     name, stock id          { "NemoHelpLost", NULL,
-     label, accelerator        N_("Find a lost file"), NULL,
-     tooltip                   N_("Follow these tips if you can't find a file you created or downloaded."),
-                                 G_CALLBACK (action_nemo_manual_callback) },
-     name, stock id          { "NemoHelpShare", NULL,
-     label, accelerator        N_("Share and transfer files"), NULL,
-     tooltip                   N_("Easily transfer files to your contacts and devices from the file manager."),
-                                 G_CALLBACK (action_nemo_manual_callback) }, **/
   /* name, stock id */         { "About Nemo", "help-about-symbolic",
   /* label, accelerator */       N_("_About"), NULL,
   /* tooltip */                  N_("Display credits for Files and its Nemo origins"),
@@ -1692,9 +1676,6 @@ nemo_window_create_toolbar_action_group (NemoWindow *window)
 
 	g_object_unref (action);
 
-	/**
-	 * Nemo 2.30/2.32 type actions
-	 */
    	action = g_object_new (NEMO_TYPE_NAVIGATION_ACTION,
    			       "name", NEMO_ACTION_UP,
    			       "label", _("_Up"),

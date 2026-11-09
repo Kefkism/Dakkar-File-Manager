@@ -91,7 +91,8 @@ nemo_notebook_class_init (NemoNotebookClass *klass)
 }
 
 
-/* FIXME remove when gtknotebook's func for this becomes public, bug #.... */
+/* No public GTK+ API returns the notebook under the pointer, so this
+ * walks up the window stack to find it. */
 static NemoNotebook *
 find_notebook_at_pointer (gint abs_x, gint abs_y)
 {
@@ -101,7 +102,6 @@ find_notebook_at_pointer (gint abs_x, gint abs_y)
 	gpointer toplevel = NULL;
 	gint x, y;
 
-	/* FIXME multi-head */
 	manager = gdk_display_get_device_manager (gdk_display_get_default ());
 	pointer = gdk_device_manager_get_client_pointer (manager);
 	win_at_pointer = gdk_device_get_window_at_position (pointer, &x, &y);
@@ -465,8 +465,6 @@ nemo_notebook_add_tab (NemoNotebook *notebook,
 	nemo_notebook_sync_loading (notebook, slot);
 
 
-	/* FIXME gtk bug! */
-	/* FIXME: this should be fixed in gtk 2.12; check & remove this! */
 	/* The signal handler may have reordered the tabs */
 	position = gtk_notebook_page_num (gnotebook, GTK_WIDGET (slot));
 

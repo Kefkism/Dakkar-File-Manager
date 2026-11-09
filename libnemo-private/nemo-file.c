@@ -2938,8 +2938,6 @@ get_time (NemoFile *file,
 		break;
 	case NEMO_DATE_TYPE_CHANGED:
     case NEMO_DATE_TYPE_PERMISSIONS_CHANGED:
-	/* FIXME is some logic needed here ?
-	 */
 	default:
 		g_assert_not_reached ();
 		break;

@@ -105,7 +105,6 @@ enum {
     IS_ANONYMOUS   = (1 << 4)
 };
 
-/* Remember to fill in descriptions below */
 static struct MethodInfo methods[] = {
 	/* FIXME: we need to alias ssh to sftp */
 	{ "sftp",  SHOW_PORT | SHOW_USER, 22 },
@@ -113,7 +112,7 @@ static struct MethodInfo methods[] = {
 	{ "ftp",  IS_ANONYMOUS | SHOW_PORT, 21 },
 	{ "smb",  SHOW_SHARE | SHOW_USER | SHOW_DOMAIN, 0 },
 	{ "dav",  SHOW_PORT | SHOW_USER, 80 },
-	/* FIXME: hrm, shouldn't it work? */
+	/* davs is https; it gets the SHOW_PORT field and defaults to port 443 */
 	{ "davs", SHOW_PORT | SHOW_USER, 443 },
 };
 

@@ -56,6 +56,7 @@ typedef struct {
 GType                  nemo_desktop_window_get_type            (void);
 NemoDesktopWindow     *nemo_desktop_window_new                 (gint monitor);
 gboolean               nemo_desktop_window_loaded              (NemoDesktopWindow *window);
+gboolean nemo_desktop_window_is_loaded (NemoDesktopWindow *window);
 gint                   nemo_desktop_window_get_monitor         (NemoDesktopWindow *window);
 void                   nemo_desktop_window_update_geometry     (NemoDesktopWindow *window);
 gboolean               nemo_desktop_window_get_grid_adjusts    (NemoDesktopWindow *window,

@@ -324,6 +324,12 @@ nemo_desktop_window_loaded (NemoDesktopWindow *window)
 	return window->details->loaded;
 }
 
+gboolean
+nemo_desktop_window_is_loaded (NemoDesktopWindow *window)
+{
+	return window->details->loaded;
+}
+
 gint
 nemo_desktop_window_get_monitor (NemoDesktopWindow *window)
 {

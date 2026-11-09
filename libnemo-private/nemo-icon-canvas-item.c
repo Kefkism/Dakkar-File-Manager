@@ -619,7 +619,6 @@ compute_text_rectangle (const NemoIconCanvasItem *item,
                 	text_rectangle.x0 = text_rectangle.x1 - text_dx - text_width;
 		}
 
-		/* VOODOO-TODO */
 #if 0
 		if (for_layout) {
 			/* in this case, we should be more smart and calculate the size according to the maximum
@@ -1804,7 +1803,6 @@ EelDRect
 nemo_icon_canvas_item_get_text_rectangle (NemoIconCanvasItem *item,
 					      gboolean for_layout)
 {
-	/* FIXME */
 	EelIRect icon_rectangle;
 	EelIRect text_rectangle;
 	EelDRect ret;
@@ -2733,6 +2731,155 @@ typedef struct {
 	AtkGObjectAccessibleClass parent_class;
 } NemoIconCanvasItemAccessibleClass;
 
+/* ===================== AtkComponent interface ========================== */
+/* Icon items previously exposed no geometry (extents -1,-1,-1,-1), which
+ * broke screen magnifiers and click-target discovery. Report the canvas
+ * item's bounds in window/screen coordinates. */
+
+static gboolean
+nemo_icon_canvas_item_accessible_get_window_rect (NemoIconCanvasItem *item,
+                                                  gint *xp, gint *yp,
+                                                  gint *wp, gint *hp)
+{
+	EelCanvasItem *canvas_item;
+	EelCanvas *canvas;
+	double wx1, wy1, wx2, wy2;
+	gint cx1, cy1, cx2, cy2;
+	GtkWidget *canvas_widget, *toplevel;
+	GtkAllocation allocation;
+	gint tx = 0, ty = 0;
+
+	canvas_item = EEL_CANVAS_ITEM (item);
+	canvas = EEL_CANVAS (canvas_item->canvas);
+	canvas_widget = GTK_WIDGET (canvas);
+
+	if (!gtk_widget_get_realized (canvas_widget)) {
+		return FALSE;
+	}
+
+	/* Items live in the root group, so item bounds are world coords. */
+	eel_canvas_item_get_bounds (canvas_item, &wx1, &wy1, &wx2, &wy2);
+	eel_canvas_w2c (canvas, wx1, wy1, &cx1, &cy1);
+	eel_canvas_w2c (canvas, wx2, wy2, &cx2, &cy2);
+
+	toplevel = gtk_widget_get_toplevel (canvas_widget);
+	if (toplevel != NULL && toplevel != canvas_widget &&
+	    gtk_widget_translate_coordinates (canvas_widget, toplevel, cx1, cy1, &tx, &ty)) {
+		if (xp) *xp = tx;
+		if (yp) *yp = ty;
+	} else {
+		gtk_widget_get_allocation (canvas_widget, &allocation);
+		if (xp) *xp = allocation.x + cx1;
+		if (yp) *yp = allocation.y + cy1;
+	}
+	if (wp) *wp = MAX (0, cx2 - cx1);
+	if (hp) *hp = MAX (0, cy2 - cy1);
+
+	return TRUE;
+}
+
+static void
+nemo_icon_canvas_item_accessible_component_get_extents (AtkComponent *component,
+                                                        gint *x, gint *y,
+                                                        gint *width, gint *height,
+                                                        AtkCoordType coord_type)
+{
+	NemoIconCanvasItem *item;
+	gboolean have = FALSE;
+
+	item = NEMO_ICON_CANVAS_ITEM (atk_gobject_accessible_get_object (ATK_GOBJECT_ACCESSIBLE (component)));
+	if (item != NULL) {
+		have = nemo_icon_canvas_item_accessible_get_window_rect (item, x, y, width, height);
+	}
+	if (!have) {
+		*x = -1;
+		*y = -1;
+		*width = -1;
+		*height = -1;
+		return;
+	}
+
+	if (coord_type == ATK_XY_SCREEN) {
+		GdkWindow *gdk_window;
+		gint wx, wy;
+
+		gdk_window = gtk_widget_get_window (GTK_WIDGET (EEL_CANVAS_ITEM (item)->canvas));
+		if (gdk_window != NULL) {
+			gdk_window_get_origin (gdk_window, &wx, &wy);
+			*x += wx;
+			*y += wy;
+		}
+	}
+}
+
+static void
+nemo_icon_canvas_item_accessible_component_get_position (AtkComponent *component,
+                                                         gint *x, gint *y,
+                                                         AtkCoordType coord_type)
+{
+	gint w, h;
+
+	nemo_icon_canvas_item_accessible_component_get_extents (component, x, y, &w, &h, coord_type);
+}
+
+static void
+nemo_icon_canvas_item_accessible_component_get_size (AtkComponent *component,
+                                                     gint *width, gint *height)
+{
+	gint x, y;
+
+	nemo_icon_canvas_item_accessible_component_get_extents (component, &x, &y, width, height, ATK_XY_WINDOW);
+}
+
+static gboolean
+nemo_icon_canvas_item_accessible_component_contains (AtkComponent *component,
+                                                     gint x, gint y,
+                                                     AtkCoordType coord_type)
+{
+	gint ix, iy, iw, ih;
+
+	nemo_icon_canvas_item_accessible_component_get_extents (component, &ix, &iy, &iw, &ih, coord_type);
+	if (iw <= 0 || ih <= 0) {
+		return FALSE;
+	}
+	return (x >= ix && x < ix + iw && y >= iy && y < iy + ih);
+}
+
+static AtkObject *
+nemo_icon_canvas_item_accessible_component_ref_accessible_at_point (AtkComponent *component,
+                                                                    gint x, gint y,
+                                                                    AtkCoordType coord_type)
+{
+	if (nemo_icon_canvas_item_accessible_component_contains (component, x, y, coord_type)) {
+		return ATK_OBJECT (g_object_ref (component));
+	}
+	return NULL;
+}
+
+static AtkLayer
+nemo_icon_canvas_item_accessible_component_get_layer (AtkComponent *component)
+{
+	return ATK_LAYER_WIDGET;
+}
+
+static gint
+nemo_icon_canvas_item_accessible_component_get_mdi_zorder (AtkComponent *component)
+{
+	return 0;
+}
+
+static void
+nemo_icon_canvas_item_accessible_component_interface_init (AtkComponentIface *iface)
+{
+	iface->get_extents = nemo_icon_canvas_item_accessible_component_get_extents;
+	iface->get_position = nemo_icon_canvas_item_accessible_component_get_position;
+	iface->get_size = nemo_icon_canvas_item_accessible_component_get_size;
+	iface->contains = nemo_icon_canvas_item_accessible_component_contains;
+	iface->ref_accessible_at_point = nemo_icon_canvas_item_accessible_component_ref_accessible_at_point;
+	iface->get_layer = nemo_icon_canvas_item_accessible_component_get_layer;
+	iface->get_mdi_zorder = nemo_icon_canvas_item_accessible_component_get_mdi_zorder;
+}
+
 G_DEFINE_TYPE_WITH_CODE (NemoIconCanvasItemAccessible,
 			 nemo_icon_canvas_item_accessible,
 			 ATK_TYPE_GOBJECT_ACCESSIBLE,
@@ -2741,7 +2888,9 @@ G_DEFINE_TYPE_WITH_CODE (NemoIconCanvasItemAccessible,
 			 G_IMPLEMENT_INTERFACE (ATK_TYPE_TEXT,
 						nemo_icon_canvas_item_accessible_text_interface_init)
 			 G_IMPLEMENT_INTERFACE (ATK_TYPE_ACTION,
-						nemo_icon_canvas_item_accessible_action_interface_init));
+					nemo_icon_canvas_item_accessible_action_interface_init)
+			 G_IMPLEMENT_INTERFACE (ATK_TYPE_COMPONENT,
+					nemo_icon_canvas_item_accessible_component_interface_init));
 
 static AtkStateSet*
 nemo_icon_canvas_item_accessible_ref_state_set (AtkObject *accessible)

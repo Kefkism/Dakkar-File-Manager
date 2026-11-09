@@ -666,13 +666,9 @@ report_broken_symbolic_link (GtkWindow *parent_window, NemoFile *file)
 
 	gtk_dialog_set_default_response (dialog, GTK_RESPONSE_CANCEL);
 
-	/* Make this modal to avoid problems with reffing the view & file
-	 * to keep them around in case the view changes, which would then
-	 * cause the old view not to be destroyed, which would cause its
-	 * merged Bonobo items not to be un-merged. Maybe we need to unmerge
-	 * explicitly when disconnecting views instead of relying on the
-	 * unmerge in Destroy. But since BonoboUIHandler is probably going
-	 * to change wildly, I don't want to mess with this now.
+	/* Make this dialog modal: the view and file are kept referenced
+	 * for the duration of the mount, and a modal dialog prevents
+	 * switching views (and destroying the view) mid-operation.
 	 */
 
 	response = gtk_dialog_run (dialog);
@@ -1781,7 +1777,7 @@ activate_files (ActivateParameters *parameters)
 		for (l = unhandled_open_in_app_uris; l != NULL; l = l->next) {
 			uri = l->data;
 
-            // TODO: Handle this better? - this unhandled uri is a favorite with a missing target.
+            /* Favorites whose target file no longer exists are skipped. */
             XAppFavoriteInfo *info = xapp_favorites_find_by_uri (xapp_favorites_get_default (), uri);
 
             if (info != NULL) {
@@ -2224,9 +2220,9 @@ activation_start_mountables (ActivateParameters *parameters)
 /**
  * nemo_mime_activate_files:
  *
- * Activate a list of files. Each one might launch with an application or
- * with a component. This is normally called only by subclasses.
- * @view: FMDirectoryView in question.
+ * Activate a list of files. Each one might launch an application or
+ * the default handler for the file type.
+ * @view: NemoView in question.
  * @files: A GList of NemoFiles to activate.
  *
  **/
@@ -2307,7 +2303,7 @@ nemo_mime_activate_files (GtkWindow *parent_window,
  *
  * Activate a file in this view. This might involve switching the displayed
  * location for the current window, or launching an application.
- * @view: FMDirectoryView in question.
+ * @view: NemoView in question.
  * @file: A NemoFile representing the file in this view to activate.
  * @use_new_window: Should this item be opened in a new window?
  *

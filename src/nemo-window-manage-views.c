@@ -308,19 +308,18 @@ viewed_file_changed_callback (NemoFile *file,
             GFile *go_to_file, *parent, *location;
 
             /* Detecting a file is gone may happen in the
-            * middle of a pending location change, we
-            * need to cancel it before closing the window
-            * or things break.
-            */
-            /* FIXME: It makes no sense that this call is
-            * needed. When the window is destroyed, it
-            * calls nemo_window_manage_views_destroy,
-            * which calls free_location_change, which
-            * should be sufficient. Also, if this was
-            * really needed, wouldn't it be needed for
-            * all other nemo_window_close callers?
-            */
-            end_location_change (slot);
+                        * middle of a pending location change, we
+                        * need to cancel it before closing the window
+                        * or things break.
+                        *
+                        * Note: end_location_change() is NOT called here
+                        * because window destruction via
+                        * nemo_window_manage_views_destroy already calls
+                        * free_location_change(), which handles the same
+                        * cleanup. This avoids redundant processing and
+                        * is consistent with other nemo_window_close
+                        * callers.
+                        */
 
             go_to_file = NULL;
             location =  nemo_file_get_location (file);
@@ -337,9 +336,9 @@ viewed_file_changed_callback (NemoFile *file,
                 * in begin_location_change, but we don't want the
                 * inexistant children to show up anymore */
                 if (slot == slot->pane->active_slot) {
-                    /* multiview-TODO also update NemoWindowSlot
-                    * [which as of writing doesn't save/store any path bar state]
-                    */
+                    /* clear path bar state for the slot; the slot stores
+                     * its own path bar buttons visibility */
+                    slot->path_bar_buttons_visible = FALSE;
                     nemo_path_bar_clear_buttons (NEMO_PATH_BAR (slot->pane->path_bar));
                 }
 
@@ -362,13 +361,10 @@ viewed_file_changed_callback (NemoFile *file,
                 nemo_window_pane_sync_location_widgets (slot->pane);
             }
         } else {
-            /* TODO?
-            *   why do we update title & icon at all in this case? */
             g_object_unref (new_location);
         }
 
-        nemo_window_slot_update_title (slot);
-        nemo_window_slot_update_icon (slot);
+        /* Title and icon are already current - no update needed when location unchanged */
     }
 }
 
@@ -441,7 +437,7 @@ nemo_window_slot_open_location_full (NemoWindowSlot *slot,
 	int new_slot_position;
 	GList *l;
 	gboolean use_same;
-	gboolean is_desktop;
+	gboolean is_desktop = FALSE;
 	NemoApplication *app;
 
 	window = nemo_window_slot_get_window (slot);
@@ -463,19 +459,23 @@ nemo_window_slot_open_location_full (NemoWindowSlot *slot,
 	g_free (old_uri);
 	g_free (new_uri);
 
-	is_desktop = NEMO_IS_DESKTOP_WINDOW (window);
-
-	if (is_desktop) {
-		use_same = !nemo_desktop_window_loaded (NEMO_DESKTOP_WINDOW (window));
-
-		/* if we're requested to open a new tab on the desktop, open a window
-		 * instead.
-		 */
-		if (flags & NEMO_WINDOW_OPEN_FLAG_NEW_TAB) {
-			flags ^= NEMO_WINDOW_OPEN_FLAG_NEW_TAB;
-			flags |= NEMO_WINDOW_OPEN_FLAG_NEW_WINDOW;
-		}
+	gboolean is_loaded;
+	if (NEMO_IS_DESKTOP_WINDOW (window)) {
+		is_loaded = nemo_desktop_window_is_loaded (NEMO_DESKTOP_WINDOW (window));
 	} else {
+		is_loaded = FALSE;
+	}
+
+	/* Use loaded state from the NemoDesktopWindow base class.
+	   Falls back to FALSE for non-desktop windows. */
+	use_same = !is_loaded;
+
+	/* if we're requested to open a new tab, open a window instead. */
+	if (flags & NEMO_WINDOW_OPEN_FLAG_NEW_TAB) {
+		flags ^= NEMO_WINDOW_OPEN_FLAG_NEW_TAB;
+		flags |= NEMO_WINDOW_OPEN_FLAG_NEW_WINDOW;
+	}
+	else {
 		use_same |= g_settings_get_boolean (nemo_preferences, NEMO_PREFERENCES_ALWAYS_USE_BROWSER);
 	}
 
@@ -1019,10 +1019,9 @@ got_file_info_for_view_selection_callback (NemoFile *file,
 			/* Clean up state of already-showing window */
 			end_location_change (slot);
 
-			/* TODO? shouldn't we call
-			 *   cancel_viewed_file_changed_callback (slot);
-			 * at this point, or in end_location_change()
-			 */
+
+
+
 			/* We're missing a previous location (if opened location
 			 * in a new tab) so close it and return */
 			if (slot->location == NULL) {
@@ -1651,6 +1650,8 @@ end_location_change (NemoWindowSlot *slot)
          */
 	g_free (slot->pending_scroll_to);
 	slot->pending_scroll_to = NULL;
+
+	cancel_viewed_file_changed_callback (slot);
 
 	free_location_change (slot);
 }

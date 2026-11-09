@@ -103,11 +103,11 @@
 #include <libnemo-private/nemo-debug.h>
 #include "nemo-compress-dialog.h"
 
-/* Minimum starting update inverval */
+/* Minimum starting update interval */
 #define UPDATE_INTERVAL_MIN 200
 /* Maximum update interval */
 #define UPDATE_INTERVAL_MAX 2000
-/* Amount of miliseconds the update interval is increased */
+/* Amount of milliseconds the update interval is increased */
 #define UPDATE_INTERVAL_INC 250
 /* Interval at which the update interval is increased */
 #define UPDATE_INTERVAL_TIMEOUT_INTERVAL 500
@@ -837,14 +837,6 @@ nemo_view_peek_selection (NemoView *view)
 
     return NEMO_VIEW_CLASS (G_OBJECT_GET_CLASS (view))->peek_selection (view);
 }
-
-// int
-// nemo_view_get_selection_count (NemoView *view)
-// {
-//     g_return_val_if_fail (NEMO_IS_VIEW (view), 0);
-
-//     return NEMO_VIEW_CLASS (G_OBJECT_GET_CLASS (view))->get_selection_count (view);
-// }
 
 /**
  * nemo_view_update_menus:

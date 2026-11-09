@@ -771,8 +771,7 @@ load_files_thread (GTask        *task,
         for (i = 0; lines[i]; i++) {
             /* Ignore empty or invalid lines that cannot be parsed properly */
             if (lines[i][0] != '\0' && lines[i][0] != ' ') {
-                /* gtk 2.7/2.8 might have labels appended to bookmarks which are separated by a space */
-                /* we must seperate the bookmark uri and the potential label */
+                /* The bookmark file may append a label after the URI, separated by a space; split them */
                 gchar *space, *label;
 
                 label = NULL;

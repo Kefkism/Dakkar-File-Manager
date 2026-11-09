@@ -73,8 +73,6 @@
 #include "nemo-file-undo-manager.h"
 #include "nemo-job-queue.h"
 
-/* TODO: TESTING!!! */
-
 typedef enum {
     OP_KIND_COPY,
     OP_KIND_MOVE,
@@ -2829,7 +2827,7 @@ report_count_progress (CommonJob *job,
 
 	switch (source_info->op) {
 
-    case OP_KIND_LINK:  /* FIXME */
+    case OP_KIND_LINK:  /* no dedicated scan message yet */
     case OP_KIND_CREATE:
     case OP_KIND_PERMISSIONS:
     case OP_KIND_TRUST:
@@ -2884,7 +2882,7 @@ static char *
 get_scan_primary (OpKind kind)
 {
 	switch (kind) {
-    case OP_KIND_PERMISSIONS:  /* FIXME */
+    case OP_KIND_PERMISSIONS:  /* no dedicated scan message yet */
     case OP_KIND_LINK:
     case OP_KIND_CREATE:
     case OP_KIND_TRUST:

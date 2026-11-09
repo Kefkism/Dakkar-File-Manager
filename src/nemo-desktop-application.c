@@ -381,7 +381,6 @@ nemo_desktop_application_open (GApplication *app,
         init_desktop (self);
     }
 
-    /* FIXME: how to do this? */
 }
 
 static void

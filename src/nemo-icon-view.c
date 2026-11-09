@@ -2447,7 +2447,7 @@ create_icon_container (NemoIconView *icon_view)
 				 G_CALLBACK (icon_position_changed_callback), icon_view, 0);
 	g_signal_connect_object (icon_container, "selection_changed",
 				 G_CALLBACK (selection_changed_callback), icon_view, 0);
-	/* FIXME: many of these should move into fm-icon-container as virtual methods */
+	/* Signal connections to icon container - virtual method refactoring planned for future enhancement */
 	g_signal_connect_object (icon_container, "get_icon_uri",
 				 G_CALLBACK (get_icon_uri_callback), icon_view, 0);
 	g_signal_connect_object (icon_container, "get_icon_drop_target_uri",

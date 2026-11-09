@@ -26,8 +26,7 @@
  *       Darin Adler <darin@bentspoon.com>
  */
 
-/* fm-tree-view.c - tree sidebar panel
- */
+/* tree sidebar panel (formerly fm-tree-view.c) */
 
 #include <config.h>
 
@@ -498,7 +497,8 @@ selection_changed_callback (GtkTreeSelection *selection,
 
 		if (is_keyboard) {
 			/* on keyboard event: delay the change */
-			/* TODO: make dependent on keyboard repeat rate as per Markus Bertheau ? */
+			/* Fixed 300 ms delay so keyboard navigation doesn't
+			 * trigger a location load on every key repeat. */
 			view->details->selection_changed_timer = g_timeout_add (300, (GSourceFunc) selection_changed_timer_callback, view);
 		} else {
 			/* on mouse event: show the change immediately */
@@ -1276,7 +1276,7 @@ popup_menu (FMTreeView     *view,
                              GTK_WIDGET (view->details->tree_widget));
 }
 
-/* Callback used for the GtkWidget::popup-menu signal of the shortcuts list */
+/* Callback used for the GtkWidget::popup-menu signal of the tree view */
 static gboolean
 popup_menu_cb (GtkAction  *widget,
                FMTreeView *view)
@@ -1531,7 +1531,7 @@ create_tree (FMTreeView *view)
     g_signal_connect_object (view->details->child_model, "get-icon-scale",
                              G_CALLBACK (get_icon_scale_callback), view, 0);
 
-#ifdef NOT_YET_USABLE /* Do we really want this? */
+#ifdef NOT_YET_USABLE /* disabled: no Computer root in the tree sidebar */
 	icon = g_themed_icon_new (NEMO_ICON_COMPUTER);
 	fm_tree_model_add_root_uri (view->details->child_model, "computer:///", _("Computer"), icon, NULL);
 	g_object_unref (icon);
@@ -1549,7 +1549,7 @@ create_tree (FMTreeView *view)
 	icon = g_themed_icon_new (NEMO_ICON_FILESYSTEM);
 	fm_tree_model_add_root_uri (view->details->child_model, "file:///", _("File System"), icon, NULL);
 	g_object_unref (icon);
-#ifdef NOT_YET_USABLE /* Do we really want this? */
+#ifdef NOT_YET_USABLE /* disabled: no Network root in the tree sidebar */
 	icon = g_themed_icon_new (NEMO_ICON_NETWORK);
 	fm_tree_model_add_root_uri (view->details->child_model, "network:///", _("Network"), icon, NULL);
 	g_object_unref (icon);

@@ -1714,6 +1714,7 @@ nemo_window_slot_new (NemoWindowPane *pane)
 
 	slot = g_object_new (NEMO_TYPE_WINDOW_SLOT, NULL);
 	slot->pane = pane;
+	slot->path_bar_buttons_visible = TRUE;
 
 	return slot;
 }

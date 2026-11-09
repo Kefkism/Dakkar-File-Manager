@@ -1129,7 +1129,7 @@ update_places (NemoPlacesSidebar *sidebar)
             g_free (tooltip);
             g_free (mount_uri);
         } else {
-            /* see comment above in why we add an icon for an unmounted mountable volume */
+            /* see the comment above on why we add an icon for an unmounted mountable volume */
             icon = nemo_get_volume_icon_name (volume);
             name = g_volume_get_name (volume);
 
@@ -4379,9 +4379,9 @@ query_tooltip_callback (GtkWidget *widget,
                             &iter,
                             PLACES_SIDEBAR_COLUMN_ROW_TYPE, &type,
                             PLACES_SIDEBAR_COLUMN_EJECT, &can_eject,
-                            // HACK: If we store a bool 'hovered' we still need to have an
-                            // icon size column or else make a cell_data_func to render the icon
-                            // manually. This is simpler.
+                            /* The 'hovered' bool column needs an accompanying
+                             * icon-size column for the cell renderer; this is
+                             * simpler than a custom cell_data_func. */
                             PLACES_SIDEBAR_COLUMN_EJECT_ICON_SIZE, &icon_size,
                             -1);
 

@@ -97,6 +97,8 @@ struct NemoWindowSlot {
     guint dakkar_transfer_complete_timeout_id; /* owned by the destination tab */
     GHashTable *dakkar_group_collapsed; /* per-tab, does not alter disk state */
     gchar *dakkar_group_mode;       /* per-tab, independent of the opposite pane */
+
+    gboolean path_bar_buttons_visible;  /* whether path bar buttons are currently visible */
     gboolean dakkar_inspector_left; /* only true in left side of Extra Pane */
     gboolean quick_actions_collapsed; /* per-tab right inspector state */
     GtkWidget *quick_actions_list;

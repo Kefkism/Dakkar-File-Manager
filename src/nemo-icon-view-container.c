@@ -635,7 +635,6 @@ nemo_icon_view_container_get_icon_text (NemoIconContainer *container,
             *pinned = FALSE;
         }
 	} else {
-		/* Strip the suffix for nemo object xml files. */
 		*editable_text = nemo_file_get_display_name (file);
         if (pinned) {
             *pinned = nemo_file_get_pinning (file) && !nemo_file_is_in_favorites (file);
@@ -888,7 +887,7 @@ get_stored_icon_position (NemoIconContainer *container,
     position->x = point.x;
     position->y = point.y;
 
-    /* If it is the desktop directory, maybe the gnome-libs metadata has information about it */
+    /* Desktop icons can carry a per-file icon-scale metadata entry. */
 
     /* Disable scaling if not on the desktop */
     if (nemo_icon_container_get_is_desktop (container)) {

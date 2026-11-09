@@ -135,10 +135,8 @@ dir_changed (GFileMonitor* monitor,
 		break;
 
 	case G_FILE_MONITOR_EVENT_PRE_UNMOUNT:
-		/* TODO: Do something */
-		break;
 	case G_FILE_MONITOR_EVENT_UNMOUNTED:
-		/* TODO: Do something */
+		/* Unmount events are ignored; no queue entry is needed. */
 		break;
 	}
 

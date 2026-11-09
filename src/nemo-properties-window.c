@@ -605,12 +605,10 @@ set_name_field (NemoPropertiesWindow *window,
 			gtk_label_set_mnemonic_widget (GTK_LABEL (window->details->name_label), window->details->name_field);
 
 			/* FIXME bugzilla.gnome.org 42151:
-			 * With this (and one place elsewhere in this file, not sure which is the
-			 * trouble-causer) code in place, bug 2151 happens (crash on quit). Since
-			 * we've removed Undo from Nemo for now, I'm just ifdeffing out this
-			 * code rather than trying to fix 2151 now. Note that it might be possible
-			 * to fix 2151 without making Undo actually work, it's just not worth the
-			 * trouble.
+			 * Enabling the undo support here was linked to an
+			 * upstream crash on quit (bug 2151), so the code
+			 * below stays compiled out (UNDO_ENABLED is not
+			 * defined).
 			 */
 #ifdef UNDO_ENABLED
 			/* Set up name field for undo */
@@ -3698,7 +3696,7 @@ permission_button_update (NemoPropertiesWindow *window,
 
 	sensitive = !all_cannot_set;
 	if (!is_folder) {
-		/* Don't insitive files when we have recursive apply */
+		/* Don't desensitize files when we have recursive apply */
 		sensitive |= window->details->has_recursive_apply;
 	}
 
@@ -5151,7 +5149,7 @@ create_properties_window (StartupData *startup_data)
 				_("Close"), GTK_RESPONSE_CLOSE,
 				NULL);
 
-	/* FIXME - HIGificiation, should be done inside GTK+ */
+	/* Margins are hardcoded here because GTK+ provides no defaults for these. */
 	gtk_widget_set_margin_left (frame, 6);
 	gtk_widget_set_margin_right (frame, 6);
 	gtk_widget_set_margin_top (frame, 8);

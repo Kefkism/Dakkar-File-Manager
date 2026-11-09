@@ -297,8 +297,6 @@ list_selection_changed_callback (GtkTreeSelection *selection, gpointer user_data
 	nemo_view_notify_selection_changed (view);
 }
 
-/* Move these to eel? */
-
 static void
 tree_selection_foreach_set_boolean (GtkTreeModel *model,
 				    GtkTreePath *path,
@@ -1164,9 +1162,8 @@ button_press_callback (GtkWidget *widget, GdkEventButton *event, gpointer callba
 				      "expander-size", &expander_size,
 				      "horizontal-separator", &horizontal_separator,
 				      NULL);
-		/* TODO we should not hardcode this extra padding. It is
-		 * EXPANDER_EXTRA_PADDING from GtkTreeView.
-		 */
+		/* Hardcoded extra padding, matching GtkTreeView's private
+		 * EXPANDER_EXTRA_PADDING, which cannot be queried. */
 		expander_size += 4;
 		on_expander = (event->x <= horizontal_separator / 2 +
 			       gtk_tree_path_get_depth (path) * expander_size);
@@ -1870,7 +1867,8 @@ get_root_uri_callback (NemoTreeViewDragDest *dest,
 	return nemo_view_get_uri (NEMO_VIEW (view));
 }
 
-// this is confusing... so rename them.
+/* The names read backwards: GtkTreeView's test-expand-row signal
+ * must return FALSE to allow the expansion and TRUE to veto it. */
 #define ALLOW_EXPAND FALSE
 #define PREVENT_EXPAND TRUE
 

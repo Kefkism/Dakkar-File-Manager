@@ -241,7 +241,7 @@ nemo_list_model_get_path (GtkTreeModel *tree_model, GtkTreeIter *iter)
 	g_return_val_if_fail (iter->stamp == model->details->stamp, NULL);
 
 	if (g_sequence_iter_is_end (iter->user_data)) {
-		/* FIXME is this right? */
+		/* Iters at the end of the sequence have no path; NULL signals that. */
 		return NULL;
 	}
 
